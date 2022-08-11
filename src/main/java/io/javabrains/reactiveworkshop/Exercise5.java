@@ -1,5 +1,6 @@
 package io.javabrains.reactiveworkshop;
 
+import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
 
 import java.io.IOException;
@@ -19,9 +20,17 @@ public class Exercise5 {
 
         // Subscribe to a flux using an implementation of BaseSubscriber
         BaseSubscriber<User> baseSubscriber = new BaseSubscriber<>() {
+
+            @Override
+            protected void hookOnSubscribe(Subscription subscription) {
+                System.out.println("Subscription done");
+                request(2);
+            }
+
             @Override
             protected void hookOnNext(User value) {
                 System.out.println(value);
+                request(2);
             }
 
             @Override
@@ -31,7 +40,7 @@ public class Exercise5 {
 
             @Override
             protected void hookOnComplete() {
-                System.out.println("Complete");
+                System.out.println("Base Subscription Complete");
             }
         };
 
